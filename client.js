@@ -1,38 +1,43 @@
+const { IP, PORT } = require('./constants');
+
 const net = require('net');
-const connect = function() {
-  const conn = net.createConnection({ 
-    host: 'localhost',
-    port: 50541
+
+//Establishes connection with the game server
+
+const connect = function () {
+  const conn = net.createConnection({
+    host: IP,
+    port: PORT
   });
   conn.on('connect', () => {
-    console.log('New client connected!')
+    console.log('Sucessfully connected to game server');
+  //a "connect" handler (a callback function)
   });
 
-  // interpret incoming data as text
-  conn.on('connect', () => {
+  conn.on('connect', () => { //send data to server via TCP
     conn.write('Name: NM');
-  });
+  });  
+  
+  
 
-  conn.setEncoding('utf8'); 
+  //an event handler to handle incoming data 
+  //and console log it for the player.
   conn.on('data', (data) => {
-    console.log('Server says: ', data);
+    console.log('Game: ', data)
   });
-  /*conn.on('connect', () => {
-    conn.write('Move: up');
-  });
-  conn.on('connect', () => {
-    conn.write('Move: down');
-  });
-  conn.on('connect', () => {
-    conn.write('Move: left');
-  });
-  conn.on('connect', () => {
-    conn.write('Move: right');
-  });*/
-
-
+  
+  // interpret incoming data as text
+  conn.setEncoding('utf8');
 
   return conn;
 }
 
-module.exports = {connect};
+// ES6 object shorthand notation in client.js to export 
+//an object containing our connect function.
+const connectobject = {
+  connect,
+};
+
+//console.log(connectobject); 
+
+module.exports = connectobject;
